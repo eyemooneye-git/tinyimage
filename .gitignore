@@ -10,7 +10,7 @@
 *.res
 
 # 编辑器与 Visual Studio
-.vscode/
+# .vscode/
 .idea/
 .vs/
 *.user
