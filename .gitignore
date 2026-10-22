@@ -25,4 +25,5 @@ Desktop.ini
 *.tmp
 *.log
 
-# 根目录的 tinyimage.exe 是发布产物，默认保留，不在这里忽略。
+# exe文件
+*.exe
