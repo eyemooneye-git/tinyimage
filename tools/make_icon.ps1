@@ -31,49 +31,76 @@ function Draw-Icon([int]$size) {
     $g.Clear([System.Drawing.Color]::Transparent)
     $g.ScaleTransform($size / 1024.0, $size / 1024.0)
 
-    # Blue rounded-square badge.
-    $badge = New-RoundedPath 30 30 964 964 230
-    $gradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-        (New-Object System.Drawing.RectangleF(0, 0, 1024, 1024)),
-        [System.Drawing.Color]::FromArgb(59, 130, 246),
-        [System.Drawing.Color]::FromArgb(29, 78, 216),
-        [System.Drawing.Drawing2D.LinearGradientMode]::Vertical)
-    $g.FillPath($gradient, $badge)
-    $gradient.Dispose()
-    $badge.Dispose()
+    # Soft shadow keeps the artwork readable without adding an opaque background.
+    $shadow = New-RoundedPath 174 238 650 650 82
+    $shadowBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(38, 15, 23, 42))
+    $g.FillPath($shadowBrush, $shadow)
+    $shadowBrush.Dispose()
+    $shadow.Dispose()
 
-    # White photo card.
-    $card = New-RoundedPath 242 280 540 420 54
-    $white = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::White)
+    # Warm white photo card.
+    $card = New-RoundedPath 158 190 650 650 82
+    $white = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 255, 252, 248))
     $g.FillPath($white, $card)
 
-    # Landscape: sun, main mountain, lighter foreground hill.
-    $sunBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(59, 130, 246))
-    $g.FillEllipse($sunBrush, 606, 336, 88, 88)
+    # Sky panel.
+    $sky = New-RoundedPath 218 250 530 330 48
+    $skyGradient = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+        (New-Object System.Drawing.RectangleF(218, 250, 530, 330)),
+        [System.Drawing.Color]::FromArgb(255, 232, 246, 255),
+        [System.Drawing.Color]::FromArgb(255, 190, 226, 220),
+        [System.Drawing.Drawing2D.LinearGradientMode]::Vertical)
+    $g.FillPath($skyGradient, $sky)
+
+    # Sunset.
+    $sunBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 255, 177, 92))
+    $g.FillEllipse($sunBrush, 610, 298, 92, 92)
     $sunBrush.Dispose()
 
-    $mountainBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(37, 99, 235))
-    $mountain = @(
-        (New-Object System.Drawing.PointF(300, 660)),
-        (New-Object System.Drawing.PointF(470, 430)),
-        (New-Object System.Drawing.PointF(590, 565)),
-        (New-Object System.Drawing.PointF(665, 495)),
-        (New-Object System.Drawing.PointF(750, 660))
+    # Mountains and a teal foreground.
+    $farBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 71, 139, 139))
+    $farMountain = @(
+        (New-Object System.Drawing.PointF(218, 580)),
+        (New-Object System.Drawing.PointF(370, 395)),
+        (New-Object System.Drawing.PointF(500, 535)),
+        (New-Object System.Drawing.PointF(610, 420)),
+        (New-Object System.Drawing.PointF(748, 580))
     )
-    $g.FillPolygon($mountainBrush, $mountain)
-    $mountainBrush.Dispose()
+    $g.FillPolygon($farBrush, $farMountain)
+    $farBrush.Dispose()
 
-    $hillBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(96, 165, 250))
+    $hillBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 36, 111, 109))
     $hill = @(
-        (New-Object System.Drawing.PointF(300, 660)),
-        (New-Object System.Drawing.PointF(420, 555)),
-        (New-Object System.Drawing.PointF(540, 660))
+        (New-Object System.Drawing.PointF(218, 580)),
+        (New-Object System.Drawing.PointF(390, 485)),
+        (New-Object System.Drawing.PointF(520, 580))
     )
     $g.FillPolygon($hillBrush, $hill)
     $hillBrush.Dispose()
+    $skyGradient.Dispose()
+    $sky.Dispose()
 
     $white.Dispose()
     $card.Dispose()
+
+    # Compression chevrons: a small, recognizable downward squeeze.
+    $coral = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 245, 120, 95))
+    $pen = New-Object System.Drawing.Pen($coral, 58)
+    $pen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $pen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
+    $pen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+    $g.DrawLines($pen, @(
+        (New-Object System.Drawing.PointF(390, 640)),
+        (New-Object System.Drawing.PointF(482, 732)),
+        (New-Object System.Drawing.PointF(574, 640))
+    ))
+    $g.DrawLines($pen, @(
+        (New-Object System.Drawing.PointF(390, 746)),
+        (New-Object System.Drawing.PointF(482, 838)),
+        (New-Object System.Drawing.PointF(574, 746))
+    ))
+    $pen.Dispose()
+    $coral.Dispose()
     $g.Dispose()
     return $bmp
 }
