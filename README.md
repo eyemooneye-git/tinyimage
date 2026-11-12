@@ -42,6 +42,9 @@ cargo build --release
 copy target\release\tinyimage.exe .\tinyimage.exe
 ```
 
+`.cargo/config.toml` 为 `x86_64-pc-windows-msvc` 启用 `+crt-static`，以减少目标电脑缺少
+VC++ Redistributable 的风险。
+
 生成的是独立 exe，只依赖 Windows 自带的系统 DLL。项目里的 `tinyimage.manifest` 用于启用 Per-Monitor V2 DPI 感知和现代文件选择框。`app.rc` 把 `assets/tinyimage.ico` 和版本信息嵌入 exe；窗口启动时也从同一个图标资源加载大/小图标，因此标题栏、任务栏和资源管理器里的图标保持一致。修改图标后可用 `powershell -ExecutionPolicy Bypass -File tools\make_icon.ps1` 重新生成 `.ico`。如果找不到 `rc.exe`，构建仍会继续，但 exe 不会带自定义图标。
 
 想调整目标体积，可修改 `src/compress.rs` 顶部的 `TARGET_BYTES`、`ACCEPT_LOW`、`ACCEPT_HIGH`、`HARD_MAX`，然后重新构建。
